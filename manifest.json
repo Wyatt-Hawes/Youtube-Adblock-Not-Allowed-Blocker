@@ -1,0 +1,20 @@
+{
+    "manifest_version": 3,
+    "name": "Youtube Adblock Not Allowed Blocker",
+    "description": "Blocks the Adblock is not allowed on youtube pop-up.",
+    "version": "0.1",
+    "action": {
+      "default_popup": "intro.html",
+      "default_icon": "YT_block.png"
+    },
+    "content_scripts":[
+        {
+        "matches": ["https://www.youtube.com/*"],
+        "js":      ["/content_scripts.js"]
+        },
+        {
+            "matches": ["file:///C:/Users/Wyatt/Desktop/My%20Projects/Youtube%20Adblock%20Blocker/Youtube-Adblock-Not-Allowed-Blocker/dummy_website.html"],
+            "js":      ["/content_scripts.js"]
+        }
+    ]
+  }
