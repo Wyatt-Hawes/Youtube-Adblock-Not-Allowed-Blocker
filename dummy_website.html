@@ -49,5 +49,29 @@
         </div></ytd-enforcement-message-view-model>
         </tp-yt-paper-dialog>
     </ytd-popup-container>
+
+    <button id="addPopupButton">Add Popup</button>
+    <div id="popup_container"></div>
+    <script>
+
+        // Function to add the popup element
+        let popupText = "Ad blockers are not allowed"
+        let popup_container = document.getElementById("popup_container")
+        function addPopup() {
+            console.log("adding popup block")
+                const popup = document.createElement("ytd-popup-container");
+                popup.classList.add("style-scope", "ytd-app");
+                popup.textContent = popupText;
+                popup_container.appendChild(popup);
+                isPopupAdded = true;
+        }
+
+
+        // Add a click event listener to the "Add Popup" button
+        addEventListener("click", addPopup);
+
+        //Add the popup every 5 seconds
+        setInterval(addPopup, 5000);
+    </script>
 </body>
 </html>
