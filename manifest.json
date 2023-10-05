@@ -7,6 +7,9 @@
       "default_popup": "intro.html",
       "default_icon": "YT_block.png"
     },
+    "permissions": [
+        "storage"
+    ],
     "content_scripts":[
         {
             "matches": ["https://www.youtube.com/*"],
@@ -16,5 +19,8 @@
             "matches": ["file:///*"],
             "js":      ["/content_scripts.js"]
         }
-    ]
+    ],
+    "background": {
+        "service_worker": "background.js"
+    }
   }
