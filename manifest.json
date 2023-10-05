@@ -9,11 +9,11 @@
     },
     "content_scripts":[
         {
-        "matches": ["https://www.youtube.com/*"],
-        "js":      ["/content_scripts.js"]
+            "matches": ["https://www.youtube.com/*"],
+            "js":      ["/content_scripts.js"]
         },
         {
-            "matches": ["file:///C:/Users/Wyatt/Desktop/My%20Projects/Youtube%20Adblock%20Blocker/Youtube-Adblock-Not-Allowed-Blocker/dummy_website.html"],
+            "matches": ["file:///*"],
             "js":      ["/content_scripts.js"]
         }
     ]
