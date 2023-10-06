@@ -14,10 +14,6 @@
         {
             "matches": ["https://www.youtube.com/*"],
             "js":      ["/content_scripts.js"]
-        },
-        {
-            "matches": ["file:///*"],
-            "js":      ["/content_scripts.js"]
         }
     ],
     "background": {
