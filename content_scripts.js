@@ -46,8 +46,8 @@ observer.observe(document, {
 block_popup_with_text(bad_text);
 
 
-/* This code appears to work, but is deprecated. Using the MutationObserver instead.
-// I want to keep the code around just incade I come back to this
+/* This code appears to have worked, but the eventListener and DOMSubtreeModifed are deprecated. Using the MutationObserver instead.
+// I want to keep the code around just incase I come back to this
 
 document.addEventListener("DOMSubtreeModified", function () {
   console.log("DOMSubtreeModified event detected.");
