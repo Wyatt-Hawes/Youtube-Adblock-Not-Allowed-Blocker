@@ -1,5 +1,5 @@
 # Youtube-Adblock-Not-Allowed-Blocker
-My attempt at creating a simple Chrome extension that blocks the youtube popup "Adblockers are not allowed on youtube"
+A simple Chrome extension that blocks the youtube popup that states ``` Adblockers are not allowed on youtube ```
 
 # Files
 -----------
