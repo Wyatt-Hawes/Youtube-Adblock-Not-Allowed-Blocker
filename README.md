@@ -11,3 +11,12 @@ My attempt at creating a simple Chrome extension that blocks the youtube popup "
 - **popup.js**  -  The js file that includes all the code to update the counter in the top right extension menu
 - **README.md**  -  This file :)
 - **YT_block.png**  -  A simple image of the youtube logo with an X over it since I just wanted a quick logo
+
+
+# Note to self
+-----
+- Add ```
+        {
+            "matches": ["file:///*"],
+            "js":      ["/content_scripts.js"]
+        }``` back to manifest.json to let script run on dummy_website.
