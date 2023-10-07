@@ -2,9 +2,48 @@ console.log("YAB not allowed script running");
 
 //Text that will be searched in popup windows. If ant text in the box matches the one below, it will be deleted
 const bad_text = "Ad blockers are not allowed"
-
-//Variable to store the currently playing video
 let playing_video = document.querySelector('video');
+
+//If the video is paused, determine if it was from a user-click or because it was paused automatically.
+playing_video.addEventListener('pause', function () {
+    console.log("Handling Pause");
+    handle_video_paused();
+})
+
+//add check if the user clicked on the video itself to pause or the pause button.
+add_click_pause_event_listener(playing_video);
+add_click_pause_event_listener(document);
+
+//Check if the user clicked a Media pause key (like on the keyboard)
+document.addEventListener('keydown', (event)=>{
+    console.log("pressed!")
+    if (event.key === 'MediaPlayPause' || event.key === ' ' || event.key === "k") {
+        last_click = Date.now();
+        handle_video_paused();
+    }
+})
+
+//Sometimes a popup happens after a page is loaded, use a mutation observer. Credit: https://stackoverflow.com/questions/16618876/determining-if-a-html-element-has-been-added-to-the-dom-dynamically/16618904#16618904
+const observer = new MutationObserver(function (mutations){
+    //Page mutated!
+    mutations.forEach(function (mutation){
+        if (mutation.addedNodes && mutation.addedNodes.length > 0){
+            block_popup_with_text(bad_text);
+        }
+    })
+})
+//Set the observer to observe the page
+observer.observe(document, {
+    childList: true,
+    subtree: true,
+});
+
+
+
+//Testing purposes, run the function immedietly
+block_popup_with_text(bad_text);
+
+
 
 function block_popup_with_text(text_to_find){
     // Grab all pop-up elements on the page
@@ -37,21 +76,6 @@ function unpause_video(){
     }
 }
 
-
-//If the video is paused, determine if it was from a user-click or because it was paused automatically.
-playing_video.addEventListener('pause', function () {
-    console.log("Handling Pause");
-    handle_video_paused();
-})
-
-//Check if the user clicked on the video itself to pause
-add_click_pause_event_listener(playing_video);
-
-// Experimental: May have false positives causing the video not not resume when a popup happens
-// This is to hopefully fix the fact that the pause button that you click in the bottom left no longer works with the other setups
-// EDIT: This appears to only trigger when the click happens on the bottom left pause button (weird??) so I believe it wont have any false positives
-add_click_pause_event_listener(document);
-
 //Add a click event to the target that will correctly set the last click time and handle a video pause event.
 function add_click_pause_event_listener(target){
     target.addEventListener('click', ()=>{
@@ -59,17 +83,6 @@ function add_click_pause_event_listener(target){
         handle_video_paused();
     });
 }
-
-//Check if the user clicked a Media pause key (like on the keyboard)
-document.addEventListener('keydown', (event)=>{
-    console.log("pressed!")
-    if (event.key === 'MediaPlayPause' || event.key === ' ' || event.key === "k") {
-        last_click = Date.now();
-        handle_video_paused();
-    }
-})
-
-
 
 let last_click = 0;
 function handle_video_paused(){
@@ -79,28 +92,6 @@ function handle_video_paused(){
     }
     //Else: Do nothing, let the video get paused since it was most likely a user click pausing the video
 }
-
-//Sometimes a popup happens after a page is loaded, use a mutation observer. Credit: https://stackoverflow.com/questions/16618876/determining-if-a-html-element-has-been-added-to-the-dom-dynamically/16618904#16618904
-const observer = new MutationObserver(function (mutations){
-    //Page mutated!
-    mutations.forEach(function (mutation){
-        if (mutation.addedNodes && mutation.addedNodes.length > 0){
-            block_popup_with_text(bad_text);
-        }
-    })
-})
-
-//Set the observer to observe the page
-observer.observe(document, {
-    childList: true,
-    subtree: true,
-});
-
-
-
-//Testing purposes, run the function immedietly
-block_popup_with_text(bad_text);
-
 
 //----------------------------------------------------------------------
 /*
