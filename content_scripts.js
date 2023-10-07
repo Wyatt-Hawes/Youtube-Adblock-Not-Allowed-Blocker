@@ -6,7 +6,7 @@ let playing_video = document.querySelector('video');
 
 //If the video is paused, determine if it was from a user-click or because it was paused automatically.
 playing_video.addEventListener('pause', function () {
-    console.log("Handling Pause");
+    //console.log("Handling Pause");
     handle_video_paused();
 })
 
