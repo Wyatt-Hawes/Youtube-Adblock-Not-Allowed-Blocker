@@ -8,7 +8,8 @@ let playing_video = document.querySelector('video');
 playing_video.addEventListener('pause', function () {
     //console.log("Handling Pause");
     handle_video_paused();
-})
+});
+
 
 //add check if the user clicked on the video itself to pause or the pause button.
 add_click_pause_event_listener(playing_video);
@@ -21,6 +22,12 @@ document.addEventListener('keydown', (event)=>{
         last_click = Date.now();
         handle_video_paused();
     }
+});
+
+playing_video.addEventListener("ended", ()=>{
+    last_click = Date.now();
+    console.log("Video ended")
+    //handle_video_paused();
 })
 
 //Sometimes a popup happens after a page is loaded, use a mutation observer. Credit: https://stackoverflow.com/questions/16618876/determining-if-a-html-element-has-been-added-to-the-dom-dynamically/16618904#16618904
@@ -70,7 +77,7 @@ function unpause_video(){
     playing_video = document.querySelector('video');
 
     //Make sure a video actually exists/is not null
-    if (playing_video){
+    if (playing_video && !playing_video.ended){
         playing_video.play();
         console.log("Video Resumed!")
     }
