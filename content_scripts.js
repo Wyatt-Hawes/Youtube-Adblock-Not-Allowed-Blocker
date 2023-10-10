@@ -5,63 +5,18 @@ const bad_text = [
   "Ad blockers are not allowed",
   "Video player will be blocked",
 ];
-let playing_video = document.querySelector("video");
+
+let playing_video = null;
+attempt_grabbing_video();
 
 setInterval(() => {
-  let playing_video = document.querySelector("video");
+  attempt_grabbing_video();
 }, 1000);
-
-function get_playing_video() {
-  playing_video = document.querySelector("video");
-  if (playing_video == null) {
-    console.log("No video");
-  }
-}
 
 document.addEventListener("DOMContentLoaded", function () {
   // This code will run when the DOM content is ready
-  get_playing_video();
+  attempt_grabbing_video();
 });
-
-//If the video is paused, determine if it was from a user-click or because it was paused automatically.
-if (playing_video != null) {
-  playing_video.addEventListener("pause", function () {
-    //console.log("Handling Pause");
-    handle_video_paused();
-  });
-}
-
-//add check if the user clicked on the video itself to pause or the pause button.
-add_click_pause_event_listener(playing_video);
-add_click_pause_event_listener(document);
-
-//Check if the user clicked a Media pause key (like on the keyboard)
-document.addEventListener("keydown", (event) => {
-  console.log("pressed!");
-  if (
-    event.key === "MediaPlayPause" ||
-    event.key === " " ||
-    event.key === "k"
-  ) {
-    last_click = Date.now();
-    handle_video_paused();
-  }
-});
-
-if (playing_video != null) {
-  set_video_end();
-} else {
-  get_playing_video();
-  set_video_end();
-}
-
-function set_video_end() {
-  playing_video.addEventListener("ended", () => {
-    last_click = Date.now();
-    console.log("Video ended");
-    //handle_video_paused();
-  });
-}
 
 //Sometimes a popup happens after a page is loaded, use a mutation observer. Credit: https://stackoverflow.com/questions/16618876/determining-if-a-html-element-has-been-added-to-the-dom-dynamically/16618904#16618904
 const observer = new MutationObserver(function (mutations) {
@@ -78,7 +33,7 @@ observer.observe(document, {
   subtree: true,
 });
 
-//Testing purposes, run the function immedietly
+//Attempt blocking instantly
 block_popup_with_text(bad_text);
 
 function block_popup_with_text(text_to_find) {
@@ -103,6 +58,58 @@ function block_popup_with_text(text_to_find) {
   }
 }
 
+function attempt_grabbing_video() {
+  playing_video = document.querySelector("video");
+
+  if (playing_video != null) {
+    run_when_video_found();
+  }
+}
+
+function run_when_video_found() {
+  //add check if the user clicked on the video itself to pause or the pause button.
+  add_click_pause_event_listener(playing_video);
+  add_click_pause_event_listener(document);
+
+  //If the video is paused, determine if it was from a user-click or because it was paused automatically.
+  add_pause_handler(playing_video);
+
+  //Check if the user clicked a Media pause key (like on the keyboard)
+  add_keypress_listener();
+
+  //Add video ended event listener
+  video_ended_event_listener(playing_video);
+}
+
+//If the video is paused, determine if it was from a user-click or because it was paused automatically.
+function add_pause_handler(vid) {
+  vid.addEventListener("pause", () => {
+    handle_video_paused();
+  });
+}
+
+//Check if the user clicked a Media pause key (like on the keyboard)
+function add_keypress_listener() {
+  document.addEventListener("keydown", (event) => {
+    console.log("pressed!");
+    if (
+      event.key === "MediaPlayPause" ||
+      event.key === " " ||
+      event.key === "k"
+    ) {
+      last_click = Date.now();
+      handle_video_paused();
+    }
+  });
+}
+
+function video_ended_event_listener(vid) {
+  vid.addEventListener("ended", () => {
+    last_click = Date.now();
+    console.log("Video ended");
+  });
+}
+
 function unpause_video() {
   //Maybe the video can change(?) so recalculate it.
   playing_video = document.querySelector("video");
@@ -114,7 +121,6 @@ function unpause_video() {
   }
 }
 
-//Add a click event to the target that will correctly set the last click time and handle a video pause event.
 function add_click_pause_event_listener(target) {
   if (target == null) {
     return;
@@ -133,25 +139,3 @@ function handle_video_paused() {
   }
   //Else: Do nothing, let the video get paused since it was most likely a user click pausing the video
 }
-
-//----------------------------------------------------------------------
-/*
-//Testing purposes, add a testing key.
-//Edit: Unpauses the youtube video successfully!
-
-document.addEventListener("keydown", function (event) {
-    console.log("Key pressed!")
-    if (event.key === "`" || event.key === "~"){
-        unpause_video();
-    }
-});
-*/
-
-/* This code appears to have worked, but the eventListener and DOMSubtreeModifed are deprecated. Using the MutationObserver instead.
-// I want to keep the code around just incase I come back to this
-
-document.addEventListener("DOMSubtreeModified", function () {
-  console.log("DOMSubtreeModified event detected.");
-  block_popup_with_text(bad_text);
-});
-*/
